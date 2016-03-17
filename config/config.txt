@@ -1,7 +1,7 @@
 #Data inicial de contagem do programa
 DateRescue=01/02/2015
 #Hora do Alerta
-HourValue=11:53:00
+HourValue=14:25:00
 #DayOn e Day Off de 1 a 7 (1 para domingo e 7 para sabado)
 DayOn=2
 DayOff=6
