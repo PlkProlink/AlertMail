@@ -30,11 +30,6 @@ public class MenuView extends javax.swing.JFrame {
     
     String hora, horaAlerta;
     
-    
-    
-    /**
-     * Creates new form MenuView
-     */
     public MenuView() {
         initComponents();
         //txtHora.setText(calendar.getHora());
@@ -43,7 +38,6 @@ public class MenuView extends javax.swing.JFrame {
         
         btnDocumentacao.setEnabled(false);
         txtMensagem.setEditable(false);
-        
     }
 
     @SuppressWarnings("unchecked")
@@ -90,7 +84,7 @@ public class MenuView extends javax.swing.JFrame {
             }
         });
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -140,8 +134,9 @@ public class MenuView extends javax.swing.JFrame {
         txtAlerta.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtAlerta.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true));
 
-        txtStatus.setBackground(new java.awt.Color(153, 153, 153));
+        txtStatus.setBackground(new java.awt.Color(255, 255, 255));
         txtStatus.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true));
+        txtStatus.setOpaque(true);
 
         btnStop.setText("Parar");
         btnStop.addActionListener(new java.awt.event.ActionListener() {
@@ -296,8 +291,6 @@ public class MenuView extends javax.swing.JFrame {
         int acao = JOptionPane.showConfirmDialog(null, escolha,"Atenção", JOptionPane.YES_NO_OPTION);
         if(acao==JOptionPane.YES_OPTION){
             interromperThread();
-            txtStatus.setBackground(Color.RED);
-            
         }
     }//GEN-LAST:event_btnStopActionPerformed
 
@@ -309,7 +302,6 @@ public class MenuView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAlterarActionPerformed
 
     private void timer_horaOnTime(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timer_horaOnTime
-        txtStatus.setBackground(Color.GREEN);
         Date horaAgora = new Date();
         hora = sdh.format(horaAgora);
         
@@ -318,21 +310,20 @@ public class MenuView extends javax.swing.JFrame {
         if(hora.equals(horaAlerta)==true){
             ControllerPrincipal inicia = new ControllerPrincipal();
             inicia.iniciarAlertas();
-        }
-        
+        }       
         
     }//GEN-LAST:event_timer_horaOnTime
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        String aviso ="Tem certeza que deseja encerrar o serviço?";
-        int escolha = JOptionPane.showConfirmDialog(null, aviso,"Atenção!",JOptionPane.YES_NO_OPTION);
-        if(escolha==JOptionPane.YES_OPTION){
+        String aviso = "Tem certeza que deseja encerrar o serviço?";
+        int escolha = JOptionPane.showConfirmDialog(null, aviso, "Atenção!", JOptionPane.YES_NO_OPTION);
+        if (escolha == JOptionPane.YES_OPTION) {
             controle = new ControllerPrincipal();
             controle.gerarLog("Sistema sendo encerrado!");
             System.exit(0);
+        } else {
+            repaint();
         }
-        
-        
     }//GEN-LAST:event_formWindowClosing
 
     public void iniciarThread(){
@@ -344,6 +335,7 @@ public class MenuView extends javax.swing.JFrame {
         if(horaAlerta.length()==8){
             txtHora.setText(horaAlerta);
             txtStatus.setText("Ativo");
+            txtStatus.setBackground(Color.green);
             
             int time=1000;
 
@@ -365,10 +357,10 @@ public class MenuView extends javax.swing.JFrame {
     public void interromperThread(){
         timer1.stop();
         txtStatus.setText("Inativo");
+        txtStatus.setBackground(Color.red);
         controle = new ControllerPrincipal();
         controle.gerarLog("Serviço interrompido!");
     }
-    
     
     /**
      * @param args the command line arguments

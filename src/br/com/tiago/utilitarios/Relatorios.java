@@ -40,7 +40,7 @@ public class Relatorios {
             String sql ="select * from documentos_recebidos where Para_Quem like ? and Recebido='N'";
             
             PreparedStatement ps = getCon().prepareStatement(sql);
-            ps.setString(1, user.getNome());
+            ps.setString(1, "Bianca");
             ResultSet rs = ps.executeQuery();
             
             //pegando o resultado da consulta e e jogando no jasper result set

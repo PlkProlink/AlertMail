@@ -30,26 +30,30 @@ public class UsuarioCalculos {
         String margem="";
         if(contador.getMedia()!=100){
             if(contador.getMedia()>=90 && contador.getMedia()<100){
-                margem = html.Converter("Otimo, você esta muito proximo de ficar 100% \n"
-                        + "Em dois passos você pode limpar todo historico de uma vez");
+                margem = html.Converter("Isso é Otimo, você esta muito proximo de ficar 100%.")
+                        + "<br>"+ html.Converter("Em dois passos você pode limpar todo historico de uma vez!");
             }
             else if(contador.getMedia()>=80 && contador.getMedia()<90){
-                margem = html.Converter("Bom, mas ainda pode melhorar \n"
-                        + "Em dois passos você pode limpar todo historico de uma vez");
-            }
-            else if(contador.getMedia()>=70 && contador.getMedia()<80){
-                margem = html.Converter("Regular, mas ainda pode melhorar \n"
-                        + "Em dois passos você pode limpar todo historico de uma vez");
+                margem = html.Converter("Isso é Bom, mas ainda pode melhorar!")
+                        +"<br>"+ html.Converter("Em dois passos você pode limpar todo historico de uma vez!");
             }
             else if(contador.getMedia()>=60 && contador.getMedia()<70){
-                margem = html.Converter("Ruim, seu historico é péssimo! \n"
-                        + "Em dois passos você pode limpar todo historico de uma vez");
+                margem = html.Converter("É muito ruim, seu historico é péssimo! ")
+                        + "<br>"+ html.Converter("Estou muito chateado que você tenha deixado chegar a esse ponto."
+						+"Mas em dois passos você pode limpar todo historico de uma vez");
             }
-            else
-                margem = html.Converter("Muito ruim");
+            else{
+                if(contador.getContNegativo()<=5){
+                    margem = html.Converter("Você não tem muita documentação pendente para finalizar")
+                            +"<br>"+html.Converter("Mesmo assim você deve finalizar todos o historico");
+                }
+                else
+                    margem = html.Converter("Isso é horrivel,  ")+"<br>"+ html.Converter("estou muito chateado que você tenha deixado chegar a esse ponto."
+                 					+"Mas em dois passos você pode limpar todo historico de uma vez!");
+             }
         }
         else
-            margem = "Excelente! Não podia ser melhor";
+            margem = html.Converter("Excelente! Não podia ser melhor");
         
         return margem;
     }

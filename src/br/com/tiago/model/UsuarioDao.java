@@ -7,6 +7,7 @@ package br.com.tiago.model;
 
 import br.com.tiago.factory.ConnectionFactory;
 import br.com.tiago.utilitarios.AvisoEmail;
+import br.com.tiago.utilitarios.Grafico;
 import br.com.tiago.utilitarios.HtmlEntities;
 import br.com.tiago.utilitarios.Relatorios;
 import java.sql.Connection;
@@ -112,7 +113,7 @@ public class UsuarioDao {
                         //classe htmlentities vai formatar o meu texto para html, impedindo de aparecer palavras incompletas ou ilegiveis
                         HtmlEntities html = new HtmlEntities();
                         
-                        mensagem += "<br>"
+                        mensagem += "<ul><li>"
                                 + html.Converter("Protocolo: " + this.codigo[i])
                                 + "\tData: " + novaData
                                 + html.Converter("Entregue: " + this.quemEntregou[i])
@@ -120,9 +121,9 @@ public class UsuarioDao {
                                 + html.Converter("Empresa: " + this.empresa[i])
                                 + "\t"
                                 + html.Converter("ID: " + this.id[i])
-                                + "<br>"
+                                + "</li><li>"
                                 + html.Converter("Historico: " + this.historico[i])
-                                +"<br />";
+                                +"</li></ul>";
 
                     }
                 }
@@ -136,11 +137,15 @@ public class UsuarioDao {
                     //gerando pdf do relatorio e nomeando
                     String arquivo = relatorios.imprimir(user);
                     //*Enviara o email caso o obedeça a seguinte regra, arquivo gerado e mensagem existe
-                    if (!arquivo.equals("") && !mensagem.equals("")) {
+                    if (!arquivo.equals("")) {
                         model.setMensagem(user.getNome() + "=Relatorio gerado em:" + arquivo);
-                        AvisoEmail email = new AvisoEmail();
-                        email.enviaAlerta(model, user, mensagem, arquivo, contador, margem);
-
+                        Grafico grafico = new Grafico();
+                        String arquivoGrafico = grafico.gerarPizza(user, contador);
+                        if(arquivoGrafico!=null){
+                            model.setMensagem(user.getNome() + "=Grafico gerado em:" + arquivoGrafico);
+                            AvisoEmail email = new AvisoEmail();
+                            email.enviaAlerta(model, user, arquivoGrafico, mensagem, arquivo, contador, margem);
+                        }
                     } else {
                         model.setMensagem(user.getNome() + "=Falha ao enviar o email, problema no arquivo gerado!");
                     }
