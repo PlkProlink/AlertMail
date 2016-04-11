@@ -162,7 +162,13 @@ public class EnviarAlerta implements Runnable{
                                                       AvisoEmail email = new AvisoEmail();
                                                       //montando detalhes do relatório
                                                       String detalhes =  inicioTabela+cabecalho+builder.toString()+fimTabela;
-                                                      email.enviaAlerta(model, user, arquivoGrafico, detalhes, arquivoRelatorio, contador, margem);
+                                                      if(email.enviaAlerta(model, user, arquivoGrafico, detalhes, arquivoRelatorio, contador, margem)){
+                                                               model.setMensagem(user.getEmail()+"=Alerta Enviado com Sucesso!");
+                                                      }
+                                                      else
+                                                          model.setMensagem(user.getEmail()+"=Não foi possivel disparar o alerta!");
+                                                      model.setMensagem("Aguardando cronômetro para disparar o próximo aviso!");
+                                                      
                                              }else
                                                       model.setMensagem(user.getNome()+"=Falha ao enviar o e-mail, problema no arquivo gráfico!");
                                     }else model.setMensagem(user.getNome() + "=Falha ao enviar o e-mail, problema no arquivo gerado!");

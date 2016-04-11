@@ -57,7 +57,7 @@ public class Grafico {
     private JFreeChart createChart(final PieDataset dataset) {
         
         final JFreeChart chart = ChartFactory.createPieChart3D(
-            "Visão Geral",  // chart title
+            "Minha Visão",  // chart title
             dataset,                // data
             true,                   // include legend
             true,

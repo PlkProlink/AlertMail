@@ -11,7 +11,7 @@ import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
 public class AvisoEmail {
-    public void enviaAlerta(Model model, ModelUsuario user, String grafico, String mensagem, String arquivo, ModelContador contador, String margem){
+    public boolean enviaAlerta(Model model, ModelUsuario user, String grafico, String mensagem, String arquivo, ModelContador contador, String margem){
     
     HtmlEmail email = new HtmlEmail();
     email.setHostName( "smtp.prolinkcontabil.com.br" );
@@ -34,13 +34,13 @@ public class AvisoEmail {
                   "<p style=\"color: blue;\">"
                   +"<span style=\"font-size:20px;\"><strong>Ol&aacute; ").append(user.getNome()).append(";</strong></span><br />"
                   + "<br />"
-                  +"<span style=\"color:#000000;\"><em><strong>Eu voltei;</strong></em>, </span></p>"
-                  +"Percebi que existem documentos destinados para voc&ecirc; aguardando sua intera&ccedil;&atilde;o"
-                  +" Talvez ainda n&atilde;o t viu!</span></p>"
+                  +"<span style=\"color:#000000;\"><em><strong></strong></em>, </span></p>"
+                  +"Percebi que existem documentos destinados para voc&ecirc; aguardando sua intera&ccedil;&atilde;o."
+                  +"Talvez ainda n&atilde;o tenha visto!</span></p>"
          +"<p>"
                   +"<span style=\"color:#000000;\"><img alt=\"\" height=\"210\" src=\"cid:").append(idArquivo).append("\" style=\"float: right;\" width=\"210\" /></span><br />"
 
-                  +"Tamb&eacute;m Notei que voc&ecirc; tem uma margem de fechamento de <span style=\"background-color:#ffff00;\">").append(contador.getMedia()).append("%</span>.&quot;").append(margem).append("</p>"
+                  +"Tamb&eacute;m notei que voc&ecirc; tem uma margem de fechamento de <span style=\"background-color:#ffff00;\">").append(contador.getMedia()).append("%</span>.&quot;").append(margem).append("</p>"
          +"<p>"
                   +"<em>Voc&ecirc; tem um gr&aacute;fico, aqui...</em></p>"
                   +"<span style=\"color:#000000;\"><img alt=\"\" height=\"250\" src=\"cid:").append(idGrafico).append("\" style=\"float: center;\" width=\"430\" /></span><br />"
@@ -80,9 +80,10 @@ public class AvisoEmail {
         
         System.out.println("Sucesso!");
         //model.setMensagem(user.getNome()+"=Email enviado com sucesso!");
-        
+        return true;
     } catch (EmailException e) {
         //model.setMensagem(user.getNome()+"=Falha ao enviar o email, problema no arquivo gerado!");
+        return false;
     } 
     }
 }
