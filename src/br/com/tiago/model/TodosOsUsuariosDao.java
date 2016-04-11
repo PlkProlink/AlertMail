@@ -33,43 +33,36 @@ public class TodosOsUsuariosDao {
         return con;
     }
     
-    public List<ModelUsuario> ListarTodos(Model model){
+    public List<ModelUsuario> ListarTodos(){
         
         String dataFim = sdm.format(data);
         
         con = null;
-        model.setMensagem("Pegando relação de funcionários!");
-        
-        List<ModelUsuario> listaTodos = new ArrayList<>();
         
         String sql ="select Usuario, Email from login as l where l.Usuario in "+
                 "(select distinct(Para_Quem) from documentos_recebidos as d where d.Recebido='N' and "
-                + "Data_Recebimento between '2016-02-01' and '"+dataFim+"')";
+                + "Data_Recebimento between '2016-03-01' and '"+dataFim+"')";
     
         try{
+            List<ModelUsuario> listaTodos = new ArrayList<>();
+            
             PreparedStatement ps = getCon().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             if(rs!=null){
-                model.setMensagem("Relação pega! Proximo passo...!");
                 while(rs.next()){
-                    ModelUsuario modelUser = new ModelUsuario();
-                    modelUser.setNome(rs.getString(1));
-                    modelUser.setEmail(rs.getString(2));
-
-                    //System.out.println("Usuario:"+modelUser.getNome()+"\nEmail:"+modelUser.getEmail());
-                    UsuarioDao ind = new UsuarioDao();
-                    ind.listarIndividual(modelUser, model);
-                    listaTodos.add(modelUser);
-                    //model.setMensagem("Tratamento de Usuario: "+modelUser.getNome()+"e Email: "+modelUser.getEmail());
-                    
+                    ModelUsuario userBean = new ModelUsuario();
+                    userBean.setNome(rs.getString(1));
+                    userBean.setEmail(rs.getString(2));
+                    listaTodos.add(userBean);
                 }
                 con.close();
                 return listaTodos;
             }
+            else
+                return null;
         }catch(SQLException e){
-            model.setMensagem("Não conseguir relacionar lista de usuarios!"+sql);
+            
+            return null;
         }
-          return null; 
     }
-    
 }

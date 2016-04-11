@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,8 +35,7 @@ public class UsuarioDao {
 
     Date data = new Date();
 
-    SimpleDateFormat sdm = new SimpleDateFormat("yyyy-MM-dd");
-
+    
     ModelContador contador = new ModelContador();
 
     UsuarioCalculos calculos = new UsuarioCalculos();
@@ -115,8 +113,8 @@ public class UsuarioDao {
                         
                         mensagem += "<ul><li>"
                                 + html.Converter("Protocolo: " + this.codigo[i])
-                                + "\tData: " + novaData
-                                + html.Converter("Entregue: " + this.quemEntregou[i])
+                                + "\tData: " + novaData+"\t"
+                                + html.Converter("Entregue por: " + this.quemEntregou[i])
                                 + "\t"
                                 + html.Converter("Empresa: " + this.empresa[i])
                                 + "\t"
@@ -158,8 +156,11 @@ public class UsuarioDao {
 
         } catch (SQLException e) {
             model.setMensagem("Falha na relação da tabela do funcionario:"+user.getNome()+"\nSistema exige atenção! :"+sql);
+            return null;
         }
         return null;
     }
-
+public String getMensagem(){
+    return mensagem;
+}
 }
