@@ -26,7 +26,7 @@ public class Model {
     private String dataInicio;
     private String dataFim;
     
-    private String horaAlerta="08:00:00";
+    private String horaAlerta="10:00:00";
     private String diaInicio;
     private String diaFim;
     private String diaDivisivel;

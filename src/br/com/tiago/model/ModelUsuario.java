@@ -12,7 +12,6 @@ package br.com.tiago.model;
 public class ModelUsuario {
     private String email;
     private String nome;
-    
     /**
      * @return the email
      */

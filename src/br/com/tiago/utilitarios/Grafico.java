@@ -25,39 +25,38 @@ import org.jfree.util.Rotation;
  * @author Tiago
  */
 public class Grafico {
-    public String gerarPizza(ModelUsuario user, ModelContador contador){
+    public String gerarPizza(ModelUsuario user, ModelContador contador, String diretorio){
         
         // create a dataset...
         PieDataset dataset = createSampleDataset(contador);
-        
         // create the chart...
         JFreeChart chart = createChart(dataset);
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setSize(430,250);
+        chartPanel.setSize(650,380);
         
         ModelFile moFile = new ModelFile();
-        String nomeAndDir = "graficos/"+user.getNome()+moFile.getDataFile()+moFile.getHoraFile()+".jpeg";
+        String nomeAndDir = diretorio+"/"+user.getNome()+moFile.getDataFile()+moFile.getHoraFile()+".jpg";
         File filePie = new File(nomeAndDir);
         try {
-            ChartUtilities.saveChartAsJPEG(filePie, chart, 430, 250);
+            ChartUtilities.saveChartAsJPEG(filePie, chart, 650,380);
             return nomeAndDir;
         } catch (IOException ex) {
-            return null;
+            return "";
         }
     }
     
     private PieDataset createSampleDataset(ModelContador contador) {
         
         final DefaultPieDataset result = new DefaultPieDataset();
-        result.setValue("Aberto", new Double(contador.getContNegativo()));
-        result.setValue("Finalizado", new Double(contador.getContPositivo()));
+        result.setValue("Abertos", new Double(contador.getContNegativo()));
+        result.setValue("Finalizados", new Double(contador.getContPositivo()));
         return result;
         
     }
     private JFreeChart createChart(final PieDataset dataset) {
         
         final JFreeChart chart = ChartFactory.createPieChart3D(
-            "Visão Geral",  // chart title
+            "Minha Visão",  // chart title
             dataset,                // data
             true,                   // include legend
             true,
@@ -65,7 +64,7 @@ public class Grafico {
         );
 
         final PiePlot3D plot = (PiePlot3D) chart.getPlot();
-        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} ({2})"));
+        plot.setLabelGenerator(new StandardPieSectionLabelGenerator("{0} = {1} ({2})"));
         plot.setStartAngle(290);
         plot.setDirection(Rotation.CLOCKWISE);
         plot.setForegroundAlpha(0.5f);

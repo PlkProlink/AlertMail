@@ -22,14 +22,14 @@ public class ConfigModifyDao {
     
     int quantidade = 0;
     //modificador de horas
-    public void alterarHora(Model model,String hora){
+    public void alterarHora(Model model,String hora, String diretorio){
     //obedecendo o criterio de ter sido preenchido corretamente prosseguira para a proxima validação
         if(hora.trim().length()==5){
-            String h = hora;
-            
-            int horas = Integer.parseInt(h.substring(0, 2));
-            String min= h.substring(3);
-            int minutos = Integer.parseInt(h.substring(3));
+            //usar string para enviar para o config
+            String hh = hora.substring(0, 2);
+            int horas = Integer.parseInt(hh);
+            String min= hora.substring(3);
+            int minutos = Integer.parseInt(hora.substring(3));
             //validando hora informada
             if(horas<8 && horas>18){
                 MenuView.txtAlerta.setText("Horário de Alerta não pode ser menor que 8:00 ou maior que 18:00!");
@@ -40,11 +40,11 @@ public class ConfigModifyDao {
             
             else{
                 //tempo aceito, será gravado no config a alteração
-                String time=horas+":"+min+":00";
+                String time=hh+":"+min+":00";
                 model.setHoraAlerta(time);
                 
                 Config config = new Config();
-                config.alterarHora(model);
+                config.alterarHora(model, diretorio);
                 
                 model.setMensagem("Nova execução agendada as"+time+"\n");
                 

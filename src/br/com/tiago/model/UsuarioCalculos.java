@@ -27,7 +27,7 @@ public class UsuarioCalculos {
     
     public String verificaMargem(ModelContador contador){
         HtmlEntities html = new HtmlEntities();
-        String margem="";
+        String margem;
         if(contador.getMedia()!=100){
             if(contador.getMedia()>=90 && contador.getMedia()<100){
                 margem = html.Converter("Isso é Otimo, você esta muito proximo de ficar 100%.")
@@ -66,12 +66,14 @@ public class UsuarioCalculos {
             ResultSet rs = ps.executeQuery();
                 if(rs!=null){
                     if(rs.first()){
-                        contador.setContNegativo(rs.getInt(1));
+                        System.out.println("Negativo:"+rs.getInt(1));
+                        contador.setContNegativo(rs.getInt("Negativo"));
 //                        System.out.println("\nRelação negativa pronta:"+contador.getContNegativo());
                     }
                 }
                 con.close();
         }catch(SQLException e){
+            System.out.println("Erro"+e);
             //model.setMensagem(sql);
         }
     }
@@ -83,7 +85,7 @@ public class UsuarioCalculos {
             ResultSet rs = ps.executeQuery();
                 if(rs!=null){
                     if(rs.first()){
-                        contador.setContPositivo(rs.getInt(1));
+                        contador.setContPositivo(rs.getInt("Positivo"));
 //                        System.out.println("\nRelação positiva pronta:"+contador.getContPositivo());
                     }
                 }
@@ -94,12 +96,17 @@ public class UsuarioCalculos {
         }
           
     }
+    
     //calcula a media de fechamento do usuario
     public void calcula(ModelContador contador){
         int pos = contador.getContPositivo();
         int neg = contador.getContNegativo();
         int saldo = pos + neg;
-        double media = (pos * 100) /saldo;
+        double media;
+        if(pos == 0)
+            media = 0;
+        else    
+            media = (pos * 100) /saldo;
         contador.setSaldo(saldo);
         contador.setMedia(media);
     }

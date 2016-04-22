@@ -7,12 +7,15 @@ package br.com.tiago.utilitarios;
 
 import br.com.tiago.model.Model;
 import br.com.tiago.view.MenuView;
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
 
 /*
  * Todos direitos reservados a Tiago Dias de Souza.
@@ -27,21 +30,17 @@ public class Config {
     File file;
     FileWriter fWriter;
     MenuView menu;
+    
+    String dataResgate, horaAlerta, diaInical, diaFim, diaDivisivel;
+    String mensagem, nomeDiretorio;
 
-    String[] dados = new String[5];
-    String[] temp = new String[5];
-
-    String mensagem, nome = "config/config.txt";
-
-    public void criarArquivoConfig(Model model) {
-        
-        String hora=model.getHoraAlerta();
+    public void criarArquivoConfig(Model model, String diretorioConfig) {
         
         //se o arquivo config não existe ele sera recriado
-        if (file.exists() == false) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
-                fWriter = new FileWriter(nome, true);
+                fWriter = new FileWriter(this.nomeDiretorio, true);
                 String valores = "#Data inicial de contagem do programa\n"
                         + "DateRescue=01/02/2015\n"
                         + "#Hora do Alerta\n"
@@ -52,7 +51,6 @@ public class Config {
                         + "#Divide o Dia do mes pos n, se conseguir enviara o alerta\n"
                         + "DaysDivisible=1";
                 fWriter.write(valores);
-
                 fWriter.close();
                 model.setMensagem("Arquivo config recriado!");
 
@@ -61,29 +59,33 @@ public class Config {
             }
         }
     }
-
-    public void lerArquivo(Model model) {
-        file = new File(nome);
+    public void pegaDiretorio(String diretorioConfig){
+        this.nomeDiretorio=diretorioConfig+"/config.txt";
+    }
+    
+    public void lerArquivo(Model model, String diretorioConfig) {
+        pegaDiretorio(diretorioConfig);
+        
+        file = new File(nomeDiretorio);
         //se o arquivo nao existe ele sera recriado
-        criarArquivoConfig(model);
-
-        FileReader arq;
+        criarArquivoConfig(model, diretorioConfig);
+        
         try {
-            arq = new FileReader("config/config.txt");
-            BufferedReader ler = new BufferedReader(arq);
-            model.setMensagem("Lendo o arquivo config!");
-            String linha = ler.readLine();
-            int num = 0;
-            while (linha != null) {
-                int value = linha.indexOf("#");//ignorar caso a linha contenha #
-                if (value == -1) {
-                    dados[num] = linha; //jogando a informação da linha dentro do array dados
-                    num++;
-                }
-                linha = ler.readLine();
-            }
+            //instanciando classe para ler atributos do arquivo
+            Properties properties = new Properties();
+            //carregando arquivo
+            FileInputStream stream = new FileInputStream(this.nomeDiretorio);
+            //carregando atributos
+            properties.load(stream);
+            
+            dataResgate = properties.getProperty("DateRescue");
+            horaAlerta = properties.getProperty("HourValue");
+            diaInical = properties.getProperty("DayOn");
+            diaFim = properties.getProperty("DayOff");
+            diaDivisivel = properties.getProperty("DaysDivisible");
+            
+            stream.close();
             model.setMensagem("Arquivo config lido!");
-            arq.close(); //importante, fechar o arquivo usado
         } catch (FileNotFoundException ex) {
             model.setMensagem("Arquivo config não encontrado!");
         } catch (IOException ex) {
@@ -92,71 +94,69 @@ public class Config {
 
     }
 
-    public void trataValores(Model model) {
+    public void trataValores(Model model, String diretorio) {
         //trata cada campo do arquivo
         
-        temp[0] = dados[0].substring(11);//copiando o valor da array
-        //verificando se a data tem o tamanho correto
-        if (temp[0].trim().length() == 10) {
-            temp[1] = dados[1].substring(10);
-            //verfificando o tamanho da hora
-            if (temp[1].trim().length() == 8) {
-                //
-                temp[2] = dados[2].substring(6);
-                int v1 = Integer.parseInt(temp[2].trim());
-                if (v1 > 0 || v1 < 6) {
-                    temp[3] = dados[3].substring(7);
-                    int v2 = Integer.parseInt(temp[3].trim());
-                    if (v2 >= v1) {
-                        temp[4] = dados[4].substring(14);
-                        int v3 = Integer.parseInt(temp[4].trim());
-                        if (temp[4].length() > 2 && v3 > 30) {
+        //verificando se a data e hora são validas
+        if (validaData()==true) {
+            //validar dia da semana
+            int v1 = Integer.parseInt(this.diaInical);
+            if (v1 > 0 || v1 < 6) {
+                int v2 = Integer.parseInt(this.diaFim);
+                if (v2 >= v1 && v2 <= 7) {
+                    int v3 = Integer.parseInt(this.diaDivisivel);
+                    if (v3 >= 1 && v3 <= 30) {
+                        model.setDataInicio(this.dataResgate);
+                        model.setMensagem("Data Inicio=" + this.dataResgate + "=Sucesso");
+                        model.setHoraAlerta(this.horaAlerta);
+                        model.setMensagem("Hora do Alerta=" + this.horaAlerta + "=Sucesso");
+                        model.setDiaInicio(this.diaInical);
+                        model.setMensagem("Dia Inicio=" + this.diaInical + "=Sucesso");
+                        model.setDiaFim(this.diaFim);
+                        model.setMensagem("Dia fim=" + this.diaFim + "=Sucesso");
+                        model.setDiaDivisivel(this.diaDivisivel);
+                        model.setMensagem("Intervalo=" + this.diaDivisivel + "=Sucesso");
 
-                            model.setMensagem("Valor no campo divisivel final em config esta incorreto!");
-                            model.setMensagem("Resolva esse erro deletando o arquivo config e reiniciando o serviço!");
-                        } else {
-                            model.setDataInicio(temp[0]);
-                            model.setMensagem("Data Inicio=" + temp[0] + "=Sucesso");
-                            model.setHoraAlerta(temp[1]);
-                            model.setMensagem("Hora do Alerta=" + temp[1] + "=Sucesso");
-                            model.setDiaInicio(temp[2]);
-                            model.setMensagem("Dia Inicio=" + temp[2] + "=Sucesso");
-                            model.setDiaFim(temp[3]);
-                            model.setMensagem("Dia fim=" + temp[3] + "=Sucesso");
-                            model.setDiaDivisivel(temp[4]);
-                            model.setMensagem("Intervalo=" + temp[4] + "=Sucesso");
+                        model.setMensagem("O arquivo config esta legivel!");
+                        model.setMensagem("Finalizando verificação das configurações! Pronto para a proxima etapa!");
 
-                            model.setMensagem("O arquivo config esta legivel!");
-                            model.setMensagem("Finalizando verificação das configurações! Pronto para a proxima etapa!");
-                        }
-                    } else {
-                        model.setMensagem("Valor no campo dia final em config esta incorreto!");
-                        model.setMensagem("Resolva esse erro deletando o arquivo config e reiniciando o serviço!");
-                    }
-                } else {
-                    model.setMensagem("Valor no campo dia inicial em config esta incorreto!");
-                    model.setMensagem("Resolva esse erro deletando o arquivo config e reiniciando o serviço!");
-                }
-            } else {
-                model.setMensagem("Valor no campo hora em config esta incorreto!");
-                model.setMensagem("Resolva esse erro deletando o arquivo config e reiniciando o serviço!");
-            }
-        } else {
-            model.setMensagem("Valor no campo data em config esta incorreto!");
-            model.setMensagem("Resolva esse erro deletando o arquivo config e reiniciando o serviço!");
-        }
-//            for(int i = 0; i<temp.length; i++){
-//                System.out.print(temp[i]+"\n");
-//            }
+                    } else  setMensagem(model, "Valor no campo intervalo em config esta incorreto!", diretorio);
+                } else  setMensagem(model, "Valor no campo dia final em config esta incorreto!", diretorio);
+            } else  setMensagem(model, "Valor no campo dia inicial em config esta incorreto!", diretorio);
+        } else setMensagem(model, "Valor no campo data ou hora em config esta incorreto!", diretorio);
     }
-
-    public void alterarHora(Model model) {
-        file = new File(nome);
+    private boolean validaData(){
+        SimpleDateFormat sdh, sdf;
+        Date date, hour;
+        sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdh = new SimpleDateFormat("HH:mm:ss");
+        try {
+          date = sdf.parse(this.dataResgate);
+          hour = sdh.parse(this.horaAlerta);
+          return true;
+        } catch (ParseException e) {
+          System.out.println("Favor digitar a data no formato informado.");
+          return false;
+        }
+    }
+    public void setMensagem(Model model, String mensagem, String diretorio){
+        model.setMensagem(mensagem);
+        FileControle file = new FileControle();
+        if(file.removeArquivos(diretorio)){
+            model.setMensagem("Resolvido o erro, deletado os arquivos em config, reiniciando o serviço!");
+            if(file.criarDiretorio(diretorio))
+                model.setMensagem("Diretorio "+diretorio+" foi recriado com sucesso!");       
+        }
+        else
+            model.setMensagem("Resolva esse erro deletando o arquivo config e reiniciando o serviço manualmente!");
+    }
+    public void alterarHora(Model model, String diretorio) {
+        pegaDiretorio(diretorio);
+        file = new File(this.nomeDiretorio);
         file.delete();
         model.setMensagem("Arquivo config deletado");
-        lerArquivo(model);
-        trataValores(model);
+        lerArquivo(model,diretorio);
+        trataValores(model, diretorio);
         model.setMensagem("Novo horário informado:" + model.getHoraAlerta() + " está ativo!");
-
     }
 }

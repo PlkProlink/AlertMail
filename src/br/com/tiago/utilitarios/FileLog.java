@@ -31,9 +31,9 @@ public class FileLog {
         }
     }
 
-    public boolean writer(Model model, ModelFile modelFile) {
+    public boolean writer(Model model, ModelFile modelFile, String diretorio) {
         String conteudo = model.getMensagem();
-        nome = ("log/log" + modelFile.getDataFile() + modelFile.getHoraFile() + ".txt");
+        nome = (diretorio+"/log" + modelFile.getDataFile() + modelFile.getHoraFile() + ".txt");
         file = new File(nome);
         gerarTXT(model);
         try {

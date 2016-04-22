@@ -2,9 +2,12 @@ package br.com.tiago.factory;
 
 
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /*
  * Todos direitos reservados a Tiago Dias de Souza.
@@ -16,18 +19,29 @@ import java.sql.SQLException;
  * @author Tiago Dias
  */
 public class ConnectionFactory{
-    
         String driver = "com.mysql.jdbc.Driver";
-	private final String url = "jdbc:mysql://192.168.0.202/clientev1";
-	private final String user = "root";
-	private final String password   = "123456"; 
+	private String url; // ex:jdbc:mysql://localhost/clientev1
+	private final String user = "prolink";
+	private final String password   = "77i#EU&K"; 
+        
+        public ConnectionFactory(){
+            try {
+                Properties p = new Properties();
+                FileInputStream file = new FileInputStream("configBanco.txt");
+                p.load(file);
+                file.close();
+                url = p.getProperty("urlBanco");
+            } catch (IOException ex) {
+                throw new RuntimeException();
+            }
+        }
 	public Connection getConnetion(){
 		try {
 			Class.forName(driver);
-			return  DriverManager.getConnection(url, user, password);
+                        return  DriverManager.getConnection(url, user, password);
 		} catch (SQLException | ClassNotFoundException erro) {
-			throw new RuntimeException(erro);		
+			throw new RuntimeException(erro);	
+                                                      
 		}
 	}
-       
 }

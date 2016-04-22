@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cadClientes" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6eed2f89-10c7-40e5-a7e9-0680b27fd2e6">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="282"/>
-	<property name="ireport.y" value="20"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#000000"/>
@@ -59,6 +59,7 @@
 	<field name="ID" class="java.lang.String"/>
 	<field name="Empresa" class="java.lang.String"/>
 	<field name="Historico" class="java.lang.String"/>
+	<field name="NomeCompleto" class="java.lang.String"/>
 	<background>
 		<band/>
 	</background>
@@ -82,6 +83,13 @@
 					<reportElement x="20" y="9" width="94" height="70" uuid="86cad451-cfa0-44e0-b6ca-8de319f8d28a"/>
 					<imageExpression><![CDATA["logoProlink.gif"]]></imageExpression>
 				</image>
+				<textField>
+					<reportElement x="166" y="72" width="198" height="20" forecolor="#FFFFFF" uuid="bf49a326-bdf8-4718-9d24-c9a06dd1ec4b"/>
+					<textElement>
+						<font size="12" isBold="true" isItalic="false" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{NomeCompleto}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</title>
