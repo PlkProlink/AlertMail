@@ -2,7 +2,7 @@ package br.com.tiago.utilitarios;
 
 import br.com.tiago.factory.ConnectionFactory;
 import br.com.tiago.model.ModelFile;
-import br.com.tiago.model.ModelUsuario;
+import br.com.tiago.model.ModelUsuarioBean;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +33,7 @@ public class Relatorios {
         return this.con = new ConnectionFactory().getConnetion();
     }
     
-    public String imprimir(ModelUsuario user, String diretorio){
+    public String imprimir(ModelUsuarioBean user, String diretorio){
         
         ModelFile file = new ModelFile();
         try{
@@ -46,7 +46,7 @@ public class Relatorios {
                     "where a.Para_Quem=? and a.Recebido='N'";
             
             PreparedStatement ps = getCon().prepareStatement(sql);
-            ps.setString(1, "Telmon");
+            ps.setString(1, user.getNome());
             ResultSet rs = ps.executeQuery();
             
             //pegando o resultado da consulta e e jogando no jasper result set

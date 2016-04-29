@@ -4,11 +4,13 @@
  */
 package br.com.tiago.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Tiago
  */
-public class ModelRelacao {
+public class ModelRelacao implements Serializable{
     private String Codigo;
     private String DataRecebimento;
     private String QuemEntregou;

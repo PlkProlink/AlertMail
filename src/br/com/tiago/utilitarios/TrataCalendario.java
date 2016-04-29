@@ -1,5 +1,6 @@
-package br.com.tiago.model;
+package br.com.tiago.utilitarios;
 
+import br.com.tiago.model.Model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -21,7 +22,7 @@ public class TrataCalendario {
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat sdtH = new SimpleDateFormat("dd/MM");
     
-    public void diaDaSemana(Model model){
+    public TrataCalendario(Model model){
         Date data = new Date();
         //*Instanciando o dia atual, mudei de Date para GegorianCalendar por causa dos codigos depreciados
         GregorianCalendar calendar = new GregorianCalendar();

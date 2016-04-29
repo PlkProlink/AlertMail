@@ -1,14 +1,15 @@
 package br.com.tiago.controller;
 
+import br.com.tiago.factory.ConnectionFactory;
 import br.com.tiago.model.ConfigModifyDao;
 import br.com.tiago.model.UsuarioDao;
 import br.com.tiago.model.Model;
 import br.com.tiago.model.ModelRelacao;
 import br.com.tiago.model.ModelContador;
 import br.com.tiago.model.ModelFile;
-import br.com.tiago.model.ModelUsuario;
+import br.com.tiago.model.ModelUsuarioBean;
 import br.com.tiago.model.TodosOsUsuariosDao;
-import br.com.tiago.model.TrataCalendario;
+import br.com.tiago.utilitarios.TrataCalendario;
 import br.com.tiago.model.UsuarioCalculos;
 import br.com.tiago.utilitarios.AvisoEmail;
 import br.com.tiago.utilitarios.Config;
@@ -18,6 +19,7 @@ import br.com.tiago.utilitarios.FileLog;
 import br.com.tiago.utilitarios.Grafico;
 import br.com.tiago.utilitarios.HtmlEntities;
 import br.com.tiago.utilitarios.Relatorios;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +34,10 @@ import java.util.List;
  */
 public class ControllerPrincipal {
     
-    List<ModelUsuario> listarTodos = new ArrayList<>();
+    List<ModelUsuarioBean> listarTodos = new ArrayList<>();
     String arquivo="arquivos", grafico="graficos", log="log", config="config";         
     Model model;
+    int time=600;
     
     public void iniciarDiretorios(){
         FileControle diretorios = new FileControle();
@@ -79,12 +82,21 @@ public class ControllerPrincipal {
             return false;
         }
     }
+    
+    public void verificaConexao(Model model){
+        Connection con=null;
+        try{
+            con = new ConnectionFactory().getConnetion();
+            if(con==null) model.setMensagem("Conexao com o banco bem sucedida!");
+        }catch(Exception e){if(con==null) model.setMensagem("Conexao com o banco com problemas!");}
+    }
+    
     //responsavel por iniciar os tratamentos de envio, so carrega se a hora for aprovada
-    public void iniciarAlertas(){
+    public void tratandoAlerta(){
         iniciarDiretorios();
         model = new Model();
         lerConfig(model);
-        TrataCalendario c = new TrataCalendario();
+        TrataCalendario c = new TrataCalendario(model);
         Feriados feriado = new Feriados();
       
         if(c.tratamentoDatas(model)==true){
@@ -100,7 +112,7 @@ public class ControllerPrincipal {
                 listarTodos = usuarios.ListarTodos();
                 Thread();
             }else
-                model.setMensagem("Hoje não será enviado alerta!É feriado de " +dataHoje+
+                model.setMensagem("Hoje não será enviado alerta! É feriado de " +dataHoje+
                         " \nNova tentativa no proximo dia útil.");
         }
         }
@@ -114,7 +126,7 @@ public class ControllerPrincipal {
          @Override
          public void run() {
              FileControle fl = new FileControle();
-                  for(ModelUsuario user : listarTodos){
+                  for(ModelUsuarioBean user : listarTodos){
                            System.out.println("Tratamento de Usuario: "+user.getNome()+" e Email: "+user.getEmail());
 
                            ModelContador contador = new ModelContador();
@@ -144,7 +156,7 @@ public class ControllerPrincipal {
                            String fimTabela="</table></div>";
                            
                            for(ModelRelacao relacao :  listaRelacao){
-                                    TrataCalendario calendario = new TrataCalendario();
+                                    TrataCalendario calendario = new TrataCalendario(model);
                                     String novaData = calendario.converterDataInicial(relacao.getDataRecebimento());
                                     long dias = calendario.calcularIntervalo(novaData);
                                     //messagem so receberá valor se o dia do recebimento do documentos não for o mesmo do alerta
@@ -192,7 +204,7 @@ public class ControllerPrincipal {
                                                       }
                                                       else
                                                           model.setMensagem(user.getEmail()+"=Não foi possivel disparar o alerta!");
-                                                      model.setMensagem("Aguardando cronômetro para disparar o próximo aviso!");
+                                                      model.setMensagem("=Aguardando cronômetro para disparar o próximo aviso em "+time/60+" minutos!");
                                                       
                                              }else
                                                       model.setMensagem(user.getNome()+"=Falha ao enviar o e-mail, problema no arquivo gráfico!");
@@ -200,7 +212,8 @@ public class ControllerPrincipal {
                            }else{model.setMensagem(user.getNome() + "=Não será gerado arquivo nem email, "
                                                                                             + "o funcionario só tem apenas um registro da data atual!");}
                            try{
-                                    Thread.sleep(600*1000);
+                               
+                                    Thread.sleep(time*1000);
                            }catch(InterruptedException e){  
                            }
                   }
@@ -218,6 +231,9 @@ public class ControllerPrincipal {
          
         model.setMensagem("Concluido! Já enviei tudo hoje, até logo!");
         Thread.interrupted();
+        }
+        private void enviar(){
+            
         }
     }
     

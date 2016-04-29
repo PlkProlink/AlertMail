@@ -58,7 +58,7 @@ public class UsuarioCalculos {
         return margem;
     }
     
-    public void pegaNegativo(ModelUsuario user, ModelContador contador){
+    public void pegaNegativo(ModelUsuarioBean user, ModelContador contador){
         con = null;
         String sql = "select count(Recebido) as Negativo from documentos_recebidos where Para_Quem like '"+user.getNome()+"' and Recebido='N'";
         try{
@@ -77,7 +77,7 @@ public class UsuarioCalculos {
             //model.setMensagem(sql);
         }
     }
-    public void pegaPositivo (ModelUsuario user, ModelContador contador){
+    public void pegaPositivo (ModelUsuarioBean user, ModelContador contador){
         con = null;
         String sql = "select count(Recebido) as Positivo from documentos_recebidos where Para_Quem like '"+user.getNome()+"' and Recebido='S'";
         try{

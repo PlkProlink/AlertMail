@@ -36,6 +36,7 @@ public class FileControle {
         }
         return false;
     }
+    
     public boolean removerDiretorio(String diretorio){
         this.dir = diretorio;
         File file = new File(dir);

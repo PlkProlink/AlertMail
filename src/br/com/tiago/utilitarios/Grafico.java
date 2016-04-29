@@ -6,7 +6,7 @@ package br.com.tiago.utilitarios;
 
 import br.com.tiago.model.ModelContador;
 import br.com.tiago.model.ModelFile;
-import br.com.tiago.model.ModelUsuario;
+import br.com.tiago.model.ModelUsuarioBean;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.jfree.util.Rotation;
  * @author Tiago
  */
 public class Grafico {
-    public String gerarPizza(ModelUsuario user, ModelContador contador, String diretorio){
+    public String gerarPizza(ModelUsuarioBean user, ModelContador contador, String diretorio){
         
         // create a dataset...
         PieDataset dataset = createSampleDataset(contador);

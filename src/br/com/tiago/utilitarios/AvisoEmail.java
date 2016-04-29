@@ -3,16 +3,14 @@ package br.com.tiago.utilitarios;
 
 import br.com.tiago.model.Model;
 import br.com.tiago.model.ModelContador;
-import br.com.tiago.model.ModelUsuario;
-import java.io.File;
-import javax.swing.JOptionPane;
+import br.com.tiago.model.ModelUsuarioBean;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 
 public class AvisoEmail {
-    public boolean enviaAlerta(Model model, ModelUsuario user, String grafico, String mensagem, String arquivo, ModelContador contador, String margem){
+    public boolean enviaAlerta(Model model, ModelUsuarioBean user, String grafico, String mensagem, String arquivo, ModelContador contador, String margem){
     
     HtmlEmail email = new HtmlEmail();
     email.setHostName( "smtp.prolinkcontabil.com.br" );
@@ -73,9 +71,8 @@ public class AvisoEmail {
         
         email.setHtmlMsg( builder.toString()+"\n");
         email.addTo(user.getEmail());
-        //email.addTo("tiago.dias@prolinkcontabil.com.br");
+        
         email.send();
-        //model.setMensagem(user.getNome()+"=Email enviado com sucesso!");
         return true;
     } catch (EmailException e) {
         model.setMensagem(user.getNome()+"=Falha ao enviar o email = !" +e);

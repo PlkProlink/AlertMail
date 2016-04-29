@@ -24,7 +24,7 @@ public class UsuarioDao {
         return con;
     }
     
-    public List<ModelRelacao> listaIndividual (ModelUsuario user){
+    public List<ModelRelacao> listaIndividual (ModelUsuarioBean user){
         
          List<ModelRelacao> listaIndividual = new ArrayList<>();
          String sql = "select * from documentos_recebidos where Para_Quem like '" + user.getNome() + "' and Recebido='N'";

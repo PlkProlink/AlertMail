@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.MaskFormatter;
 /*
  * Todos direitos reservados a Tiago Dias de Souza.
@@ -20,7 +23,8 @@ import javax.swing.text.MaskFormatter;
  * 1.0.1 - Melhoria nas mensagens e criação de tabela no html
  * 1.0.2 - Melhoria no codigo do controller
  * 1.0.3 - Melhoria no codigo do arquivo de configurações e inserindo nome no Relatorio
- * 1.0.4 - Metodo que não permite envio se o dia for feriado e remover 
+ * 1.0.4 - Metodo que não permite envio se o dia for feriado e remover classes extras 
+ * 1.1.0 - Migrado para o hibernate
  */
 public class MenuView extends javax.swing.JFrame {
 
@@ -38,6 +42,14 @@ public class MenuView extends javax.swing.JFrame {
     public MenuView() {
         initComponents();
         //txtHora.setText(calendar.getHora());
+        
+        try{
+            String lookandfeel ="com.birosoft.liquid.LiquidLookAndFeel";
+            UIManager.setLookAndFeel(lookandfeel);
+            SwingUtilities.updateComponentTreeUI(this);
+        }catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e){
+            System.out.println("Documentos: \n"+e);
+        }
         
         ControllerPrincipal controller = new ControllerPrincipal();
         controller.iniciarDiretorios();
@@ -336,7 +348,7 @@ public class MenuView extends javax.swing.JFrame {
         
         if(hora.equals(horaAlerta)==true){
             ControllerPrincipal inicia = new ControllerPrincipal();
-            inicia.iniciarAlertas();
+            inicia.tratandoAlerta();
         }       
         
     }//GEN-LAST:event_timer_horaOnTime

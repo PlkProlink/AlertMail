@@ -63,8 +63,7 @@ public class Feriados {
             case "25/12":
                 return "Natal";
             default:
-                break;
+                return null;
         }
-        return null;
     }
 }

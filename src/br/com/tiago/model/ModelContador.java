@@ -1,5 +1,7 @@
 package br.com.tiago.model;
 
+import java.io.Serializable;
+
 /*
  * Todos direitos reservados a Tiago Dias de Souza.
  * OpenSource Project www.github.com.br/tiagods
@@ -9,7 +11,7 @@ package br.com.tiago.model;
  *
  * @author Tiago Dias
  */
-public class ModelContador {
+public class ModelContador implements Serializable{
 
     private int contPositivo;
     private int contNegativo;

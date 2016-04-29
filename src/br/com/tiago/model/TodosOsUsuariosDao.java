@@ -33,7 +33,7 @@ public class TodosOsUsuariosDao {
         return con;
     }
     
-    public List<ModelUsuario> ListarTodos(){
+    public List<ModelUsuarioBean> ListarTodos(){
         
         String dataFim = sdm.format(data);
         
@@ -44,13 +44,13 @@ public class TodosOsUsuariosDao {
                 + "Data_Recebimento between '2016-03-01' and '"+dataFim+"')";
     
         try{
-            List<ModelUsuario> listaTodos = new ArrayList<>();
+            List<ModelUsuarioBean> listaTodos = new ArrayList<>();
             
             PreparedStatement ps = getCon().prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             if(rs!=null){
                 while(rs.next()){
-                    ModelUsuario userBean = new ModelUsuario();
+                    ModelUsuarioBean userBean = new ModelUsuarioBean();
                     userBean.setNome(rs.getString(1));
                     userBean.setEmail(rs.getString(2));
                     listaTodos.add(userBean);

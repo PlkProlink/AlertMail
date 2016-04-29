@@ -14,9 +14,7 @@ import java.util.Date;
  * @author Tiago Dias
  */
 public class Model {
-    
-    Date data = new Date();
-    
+        
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat sdh = new SimpleDateFormat("HH:mm");
     
@@ -103,12 +101,14 @@ public class Model {
     }
     
     public String getHoraAgora(){
+        Date data = new Date();
         this.horaAgora = sdh.format(data);
         //model.setHoraAgora(hora);
         return horaAgora;
     }
     
     public String getDataAgora(){
+        Date data=new Date();
         this.dataAgora = sdf.format(data);
         
         return dataAgora;
@@ -116,11 +116,19 @@ public class Model {
     }
     public void setMensagem(String msg){
         this.mensagem = MenuView.txtMensagem.getText();
+        StringBuilder builder = new StringBuilder();
         String quebra="";
         if(this.mensagem.length()>=1){
             quebra="\n";
         }
-        MenuView.txtMensagem.setText(this.mensagem+quebra+getDataAgora()+"="+getHoraAgora()+"="+msg);
+        builder.append(this.mensagem)
+                .append(quebra)
+                .append(getDataAgora())
+                .append("=")
+                .append(getHoraAgora())
+                .append("=")
+                .append(msg);
+        MenuView.txtMensagem.setText(builder.toString());
     }
     public String getMensagem(){
         return mensagem;
