@@ -21,11 +21,12 @@ public class TrataCalendario {
     int diaSemana, diaDoMes, diaDivisivel, diaInicial, diaFim;
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat sdtH = new SimpleDateFormat("dd/MM");
+    GregorianCalendar calendar;
     
     public TrataCalendario(Model model){
         Date data = new Date();
         //*Instanciando o dia atual, mudei de Date para GegorianCalendar por causa dos codigos depreciados
-        GregorianCalendar calendar = new GregorianCalendar();
+        calendar = new GregorianCalendar();
         calendar.setTime(data);
         //Pegando dia do mes ex:25
         diaDoMes = calendar.get(Calendar.DAY_OF_MONTH);
@@ -90,5 +91,9 @@ public class TrataCalendario {
         Date dataNova = novaData.getTime();
         String proximoDia = sdtH.format(dataNova);
         return proximoDia;
+    }
+    //pega o dia da semana igual a sexta feira para o log
+    public boolean pegaSexta(){
+        return calendar.get(Calendar.DAY_OF_WEEK)==6;
     }
 }

@@ -16,13 +16,12 @@ import java.io.IOException;
  */
 public class FileLog {
 
-    String nome;
     //static File file = new File(nome+".txt");
     File file;
     FileWriter fWriter;
 
     private void gerarTXT(Model model) {
-        if (file.exists() == false) {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException ex) {
@@ -32,12 +31,16 @@ public class FileLog {
     }
 
     public boolean writer(Model model, ModelFile modelFile, String diretorio) {
+        
+        //conteudo do log é a mensagem do view
         String conteudo = model.getMensagem();
-        nome = (diretorio+"/log" + modelFile.getDataFile() + modelFile.getHoraFile() + ".txt");
-        file = new File(nome);
+        //jogar nome do arquivo no metodo nomeLog da classe ModelFile
+        modelFile.setNomeLog(diretorio+"/log" + modelFile.getDataFile() + modelFile.getHoraFile() + ".txt");
+        file = new File(modelFile.getNomeLog());
+        //gerar arquivo txt se não existe
         gerarTXT(model);
         try {
-            fWriter = new FileWriter(nome, true);
+            fWriter = new FileWriter(modelFile.getNomeLog(), true);
             conteudo += System.getProperty("line.separator");
             fWriter.write(conteudo);
             fWriter.close();

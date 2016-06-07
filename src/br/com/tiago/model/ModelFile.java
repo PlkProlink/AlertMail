@@ -16,7 +16,7 @@ public class ModelFile {
     
 private String horaFile;
 private String dataFile;
-
+private String nomeLog;
 //*Classe importante para gerar a nomeclatura do arquivos log/relatorio
     SimpleDateFormat sdfF = new SimpleDateFormat("yyyyMMdd");
     SimpleDateFormat sdhF = new SimpleDateFormat("HHmm");
@@ -32,5 +32,19 @@ private String dataFile;
     public String getHoraFile(){
         this.horaFile = sdhF.format(data);
         return horaFile;
+    }
+
+    /**
+     * @return the nomeLog
+     */
+    public String getNomeLog() {
+        return nomeLog;
+    }
+
+    /**
+     * @param nomeLog the nomeLog to set
+     */
+    public void setNomeLog(String nomeLog) {
+        this.nomeLog = nomeLog;
     }
 }

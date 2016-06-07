@@ -12,6 +12,7 @@ import br.com.tiago.model.TodosOsUsuariosDao;
 import br.com.tiago.utilitarios.TrataCalendario;
 import br.com.tiago.model.UsuarioCalculos;
 import br.com.tiago.utilitarios.AvisoEmail;
+import br.com.tiago.utilitarios.AvisoSimples;
 import br.com.tiago.utilitarios.Config;
 import br.com.tiago.utilitarios.Feriados;
 import br.com.tiago.utilitarios.FileControle;
@@ -62,8 +63,8 @@ public class ControllerPrincipal {
         configuracao.trataValores(model, config);
     
     }
-    //criar log do textArea, geralmente ao parar o serviço ou ao finalizar
-    public boolean gerarLog(String aviso){
+    //criar log do textArea, geralmente ao parar o serviço ou ao finalizar tela
+    public void gerarLog(String aviso){
         iniciarDiretorios();
         model = new Model();
         
@@ -75,14 +76,20 @@ public class ControllerPrincipal {
         if(file.writer(model, modelFile, log)){
             model.limparTela();
             model.setMensagem("Arquivo de log criando com sucesso");
-            return true;
+            lerConfig(model);
+            TrataCalendario c = new TrataCalendario(model);
+            if(c.pegaSexta())
+                enviarLog(modelFile, model);
         }
         else{
             model.setMensagem("Log não criado!");
-            return false;
         }
     }
-    
+    private void enviarLog(ModelFile modelFile, Model model){
+        AvisoSimples simplesMail = new AvisoSimples();
+        if(simplesMail.enviarEmail(modelFile.getNomeLog(), "suporte.ti@prolinkcontabil.com.br"))
+            model.limparTela();
+    }
     public void verificaConexao(Model model){
         Connection con=null;
         try{
@@ -230,11 +237,10 @@ public class ControllerPrincipal {
             model.setMensagem("Opa, algo errado no diretorio "+grafico+", não consegui limpar!");
          
         model.setMensagem("Concluido! Já enviei tudo hoje, até logo!");
+        gerarLog("Finalizando todas as entregas!");
         Thread.interrupted();
         }
-        private void enviar(){
-            
-        }
+        
     }
     
 }
